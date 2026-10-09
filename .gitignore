@@ -46,3 +46,5 @@ playwright-report/
 .research/
 scratch/
 
+
+.vercel

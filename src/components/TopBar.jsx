@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import useStore from '../store/useStore';
 
 const SLOGANS = [
+    "🇦🇺 Sydney overwatch online",
     "Nowhere to hide",
+    "BOM warnings pinned live",
+    "RFS fires tracked",
+    "No blind spots",
+    "ADF bases + ports plotted",
     "We see everything",
     "No blind spots",
     "Nothing escapes",
@@ -32,6 +37,7 @@ const SLOGANS = [
 export default function TopBar() {
     const [time, setTime] = useState(new Date());
     const [sloganIndex, setSloganIndex] = useState(0);
+    const [ausSummary, setAusSummary] = useState(null);
     const appIsActive = useStore((s) => s.appIsActive);
     const activeFeedCount = useStore((s) => s.getActiveFeedCount());
     const totalEntityCount = useStore((s) => s.getTotalEntityCount());
@@ -62,6 +68,22 @@ export default function TopBar() {
         return date.toISOString().replace('T', ' ').substring(0, 19) + 'Z';
     };
 
+    useEffect(() => {
+        if (!appIsActive) return undefined;
+        let dead = false;
+        const pull = async () => {
+            try {
+                const r = await fetch('/api/aus/summary');
+                if (!r.ok) return;
+                const j = await r.json();
+                if (!dead) setAusSummary(j);
+            } catch (e) {}
+        };
+        pull();
+        const t = setInterval(pull, 5 * 60 * 1000);
+        return () => { dead = true; clearInterval(t); };
+    }, [appIsActive]);
+
     return (
         <div
             className="absolute top-0 left-0 right-0 h-20 pointer-events-none z-10 flex justify-between items-start"
@@ -79,12 +101,15 @@ export default function TopBar() {
                     <h1 className="text-2xl font-bold tracking-[0.3em] text-white" style={{ textShadow: '0 0 10px rgba(255,255,255,0.3)' }}>
                         GODSEYE 1.0
                     </h1>
+                    <span className="ml-2 text-[9px] tracking-[0.2em] text-neon-cyan/80 border border-neon-cyan/30 rounded px-1.5 py-0.5">
+                        AUSAI • AU
+                    </span>
                 </div>
                 <div className="text-[10px] tracking-widest text-text-dim font-semibold min-h-[16px] transition-opacity duration-300">
                     {SLOGANS[sloganIndex]}
                 </div>
                 <div className="text-[10px] tracking-wide text-electric-blue/90 font-medium">
-                    Built with ❤️ by - Vrushank Patel
+                    AusAI Edition 🇦🇺 • Sydney HQ • orig. Vrushank Patel
                 </div>
             </div>
 
@@ -113,6 +138,14 @@ export default function TopBar() {
                         ENTITIES <span className="text-white ml-1">{totalEntityCount.toLocaleString()}</span>
                     </div>
                 </div>
+                {ausSummary && (
+                    <div className="glass-panel px-3 py-1.5 mt-1 flex gap-3 text-[10px] tracking-wider text-text-dim" title={'AU live rollup @ ' + (ausSummary.updatedAt || '')}>
+                        <span>🇦🇺 AU</span>
+                        <span>WARN <span className="text-neon-red">{ausSummary.warnings}</span></span>
+                        <span>FIRE <span className="text-neon-amber">{ausSummary.fires}</span></span>
+                        <span>QUAKE <span className="text-neon-cyan">{ausSummary.quakes}</span></span>
+                    </div>
+                )}
 
                 <button
                     className="glass-panel px-3 py-1.5 mt-1 text-[10px] tracking-[0.18em] text-cyan-200 hover:text-white hover:border-cyan-400/50 transition-all"

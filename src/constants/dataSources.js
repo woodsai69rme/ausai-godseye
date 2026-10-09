@@ -16,8 +16,12 @@ export const API_URLS = {
     // ADS-B public mirrors with CORS enabled and no auth requirement.
     // Radius 10000 (NM) gives near-global coverage in one request.
     AIRPLANES_GLOBAL: 'https://api.airplanes.live/v2/point/0/0/10000',
+    // AusAI: Australia bbox feed (Sydney-centred, whole continent)
+    AIRPLANES_AUSTRALIA: 'https://api.airplanes.live/v2/point/-25.2744/133.7751/1600',
     ADSB_ONE_GLOBAL: 'https://api.adsb.one/v2/point/0/0/10000',
+    ADSB_ONE_AUSTRALIA: 'https://api.adsb.one/v2/point/-25.2744/133.7751/1600',
     ADSB_LOL_GLOBAL: 'https://api.adsb.lol/v2/point/0/0/10000',
+    ADSB_LOL_AUSTRALIA: 'https://api.adsb.lol/v2/point/-25.2744/133.7751/1600',
     AISSTREAM_WS: 'wss://stream.aisstream.io/v0/stream',
     TLE_API_BASE: 'https://tle.ivanstanojevic.me/api/tle/',
 
@@ -111,6 +115,17 @@ export const API_URLS = {
     // Served locally to keep CORS and Overpass rate limits out of the runtime path.
     MILITARY_BASES_OSM_SNAPSHOT: '/data/osmMilitarySites.json',
     OSM_OVERPASS: 'https://overpass-api.de/api/interpreter',
+    // ── AusAI Australia-first open feeds (all keyless) ──
+    // Bureau of Meteorology (BOM): warnings, observations, radar, tsunami
+    BOM_WARNINGS_NSW: 'https://api.weather.bom.gov.au/v1/warnings?states=nsw',
+    BOM_WARNINGS_ALL: 'https://api.weather.bom.gov.au/v1/warnings',
+    BOM_OBS_SYDNEY: 'https://api.weather.bom.gov.au/v1/locations?search=sydney&include=observations',
+    BOM_RADAR_SYDNEY: 'https://api.weather.bom.gov.au/v1/radar/IDR713',
+    GEOSCIENCE_QUAKES_AU: 'https://earthquakes.ga.gov.au/search?format=json&limit=100',
+    NSW_FIRES_CURRENT: 'https://www.rfs.nsw.gov.au/feeds/majorIncidents.json',
+    QLD_TRAFFIC_EVENTS: 'https://api.queenslandtraffic.qld.gov.au/v1/events',
+    // AMSA / marine + aviation registries ( OurAirports already covers AU airports )
+    AUS_MARITIME_PORTS_EXTRA: 'https://data.gov.au/api/3/action/datastore_search?resource_id=maritime-ports-au',
     CAMERA_CALTRANS_CATALOG: 'https://cwwp2.dot.ca.gov/vm/js/cctv08.js',
     CAMERA_ONTARIO_511: 'https://511on.ca/api/v2/get/cameras',
     CAMERA_ALBERTA_511: 'https://511.alberta.ca/api/v2/get/cameras',
@@ -185,10 +200,12 @@ export const LAYER_DEFS = {
     forbiddenZones: { label: 'NO-GO ZONES', color: '#ff4d4d', icon: '⛔', description: 'Restricted/forbidden areas and access-limited zones.' },
     airspace: { label: 'AIRSPACE', color: '#00ffff', icon: '⬡', description: 'No-fly/restricted airspace overlays.' },
     radio: { label: 'WORLD RADIO', color: '#ff6f4f', icon: '📻', description: 'Worldwide live radio broadcast stations with retro analog frequency tuner.' },
+    australia: { label: '🇦🇺 AUSTRALIA', color: '#ffd166', icon: '🇦🇺', description: 'AusAI: BOM warnings + Geoscience AU quakes + NSW RFS fires (keyless, backend-proxied).' },
 };
 
 // Keep these layers in the primary tactical list; everything else is grouped under "OTHERS".
 export const SURVEILLANCE_PRIMARY_LAYERS = [
+    'australia',
     'aircraft',
     'satellites',
     'radio',
@@ -207,8 +224,23 @@ export const SURVEILLANCE_PRIMARY_LAYERS = [
 ];
 
 // ── Default Camera ────────────────────────────────────
+// AusAI Edition: Australia-first view (Sydney HQ, whole continent visible)
 export const DEFAULT_CAMERA = {
-    longitude: 10,
-    latitude: 20,
-    height: 9000000,
+    longitude: 133.7751,
+    latitude: -25.2744,
+    height: 5500000,
+};
+
+// AusAI quick-fly presets
+export const AUSAI_HOME = {
+    longitude: 151.2093,
+    latitude: -33.8688,
+    height: 900000,
+};
+
+export const AU_BOUNDS = {
+    lamin: -44,
+    lomin: 112,
+    lamax: -10,
+    lomax: 154,
 };

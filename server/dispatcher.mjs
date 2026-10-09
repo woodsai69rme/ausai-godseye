@@ -4,6 +4,7 @@ import { handleCctvFrame, handleCctvSources, handleCctvHealth } from './routes/c
 import { handleFlights } from './routes/flights.mjs';
 import { handleHealth } from './routes/health.mjs';
 import { handleRadioStations, handleRadioClick } from './routes/radio.mjs';
+import { handleBomWarnings, handleGaQuakes, handleNswFires, handleAusSummary } from './routes/aus.mjs';
 
 const FLOW_TILE_REGEX = /^\/api\/(?:traffic|tomtom)\/flow\/(\d+)\/(\d+)\/(\d+)\.pbf$/;
 
@@ -83,6 +84,24 @@ export async function dispatchApiRequest(req, res, next) {
   if (pathname.startsWith('/api/radio/click/')) {
     const stationId = pathname.slice('/api/radio/click/'.length);
     await handleRadioClick(req, res, stationId);
+    return true;
+  }
+
+  // AusAI Australia feeds (BOM / GA / RFS via backend, CORS-safe)
+  if (pathname === '/api/aus/bom-warnings') {
+    await handleBomWarnings(req, res);
+    return true;
+  }
+  if (pathname === '/api/aus/quakes') {
+    await handleGaQuakes(req, res);
+    return true;
+  }
+  if (pathname === '/api/aus/fires') {
+    await handleNswFires(req, res);
+    return true;
+  }
+  if (pathname === '/api/aus/summary') {
+    await handleAusSummary(req, res);
     return true;
   }
 

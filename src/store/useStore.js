@@ -41,6 +41,7 @@ function createLayersState() {
         forbiddenZones: createLayerState(),
         airspace: createLayerState(),
         radio: createLayerState(),
+        australia: createLayerState(),
     };
 }
 

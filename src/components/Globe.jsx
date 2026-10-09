@@ -28,6 +28,7 @@ import MilitaryActivityLayer from '../layers/MilitaryActivityLayer';
 import MilitaryBasesLayer from '../layers/MilitaryBasesLayer';
 import ForbiddenZonesLayer from '../layers/ForbiddenZonesLayer';
 import RadioLayer from '../layers/RadioLayer';
+import AustraliaLayer from '../layers/AustraliaLayer';
 import TacticalWorldOverlay from './TacticalWorldOverlay';
 import { readEnvValue } from '../utils/runtimeEnv';
 
@@ -143,6 +144,7 @@ const ENTITY_ID_PREFIX_LAYER_MAP = [
     ['mil-base-', 'militaryBases'],
     ['forbidden-zone-', 'forbiddenZones'],
     ['airspace-', 'airspace'],
+    ['aus-', 'australia'],
 ];
 
 const VEHICLE_TRACK_VIEWS = {
@@ -1270,6 +1272,7 @@ export default function Globe() {
                     <ForbiddenZonesLayer viewer={viewerRef.current} />
                     <AirspaceLayer viewer={viewerRef.current} />
                     <RadioLayer viewer={viewerRef.current} />
+                    <AustraliaLayer viewer={viewerRef.current} />
                     <TacticalWorldOverlay viewer={viewerRef.current} />
                 </>
             )}

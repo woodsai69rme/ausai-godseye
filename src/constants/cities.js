@@ -1,7 +1,22 @@
 /**
  * City database with coordinates for fly-to functionality
- * Organized by strategic tiers
+ * Organized by strategic tiers — AusAI Edition: Australia-first
  */
+
+export const CITIES_TIER_AU = [
+    { name: '🇦🇺 SYDNEY (HQ)', longitude: 151.2093, latitude: -33.8688, height: 120000 },
+    { name: 'Melbourne', longitude: 144.9631, latitude: -37.8136, height: 120000 },
+    { name: 'Brisbane', longitude: 153.0251, latitude: -27.4698, height: 120000 },
+    { name: 'Perth', longitude: 115.8605, latitude: -31.9505, height: 140000 },
+    { name: 'Adelaide', longitude: 138.6007, latitude: -34.9285, height: 140000 },
+    { name: 'Canberra', longitude: 149.1300, latitude: -35.2809, height: 100000 },
+    { name: 'Darwin', longitude: 130.8411, latitude: -12.4634, height: 140000 },
+    { name: 'Hobart', longitude: 147.3272, latitude: -42.8821, height: 120000 },
+    { name: 'Gold Coast', longitude: 153.5414, latitude: -28.0167, height: 90000 },
+    { name: 'Newcastle', longitude: 151.7800, latitude: -32.9267, height: 90000 },
+    { name: 'Wollongong', longitude: 150.8841, latitude: -34.4240, height: 90000 },
+    { name: 'Cairns', longitude: 145.7781, latitude: -16.9203, height: 100000 },
+];
 
 export const CITIES_TIER_1 = [
     { name: 'Tokyo', longitude: 139.6917, latitude: 35.6895, height: 220000 },
@@ -152,6 +167,7 @@ export const CITIES_TIER_5 = [
 ];
 
 export const ALL_CITIES = [
+    ...CITIES_TIER_AU,
     ...CITIES_TIER_1,
     ...CITIES_TIER_2,
     ...CITIES_TIER_3,

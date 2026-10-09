@@ -1,5 +1,6 @@
 export const INTEL_REGIONS = [
     { id: 'all', label: 'ALL' },
+    { id: 'australia', label: '🇦🇺 AU' },
     { id: 'iran', label: 'IRAN' },
     { id: 'mideast', label: 'MIDEAST' },
     { id: 'europe', label: 'EUROPE' },
@@ -8,6 +9,30 @@ export const INTEL_REGIONS = [
 ];
 
 const REGION_PATTERNS = {
+    australia: [
+        /\baustralia\b/i,
+        /\baustralian\b/i,
+        /\bsydney\b/i,
+        /\bmelbourne\b/i,
+        /\bbrisbane\b/i,
+        /\bperth\b/i,
+        /\badelaide\b/i,
+        /\bcanberra\b/i,
+        /\bdarwin\b/i,
+        /\bhobart\b/i,
+        /\bqueensland\b/i,
+        /\bnew south wales\b/i,
+        /\bnsw\b/i,
+        /\bvictoria\b/i,
+        /\bwestern australia\b/i,
+        /\bsouth australia\b/i,
+        /\btasmania\b/i,
+        /\braaf\b/i,
+        /\badf\b/i,
+        /\baukus\b/i,
+        /\bbom\b/i,
+        /\bbushfire\b/i,
+    ],
     iran: [
         /\biran\b/i,
         /\biranian\b/i,

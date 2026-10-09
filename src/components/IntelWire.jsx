@@ -99,6 +99,26 @@ async function fetchManifestIntel() {
     return Array.isArray(payload?.items) ? payload.items : [];
 }
 
+// AusAI: live AU incidents (BOM warnings + RFS fires + AU quakes) as intel items
+async function fetchAusIntel() {
+    const out = [];
+    try {
+        const s = await fetchJsonWithPolicy('/api/aus/summary', { timeoutMs: 15000, retries: 1, circuitKey: 'intel:aus-summary' });
+        if (Number(s?.warnings) > 0) out.push({ id: 'aus-bom-' + Date.now(), source: 'BOM', title: s.warnings + ' active BOM weather warnings across Australia', link: 'http://www.bom.gov.au/', publishedAt: Date.now() });
+        if (Number(s?.fires) > 0) out.push({ id: 'aus-rfs-' + Date.now(), source: 'NSW RFS', title: s.fires + ' active fire incidents (NSW RFS feed)', link: 'https://www.rfs.nsw.gov.au/fire-information/fires-near-me', publishedAt: Date.now() });
+        if (Number(s?.quakes) > 0) out.push({ id: 'aus-quake-' + Date.now(), source: 'USGS-AU', title: s.quakes + ' recent earthquakes in AU region', link: 'https://earthquakes.ga.gov.au/', publishedAt: Date.now() });
+    } catch (e) {}
+    try {
+        const b = await fetchJsonWithPolicy('/api/aus/bom-warnings', { timeoutMs: 20000, retries: 0, circuitKey: 'intel:aus-bom' });
+        (b?.warnings || []).slice(0, 6).forEach((w, i) => {
+            const t = normalizeText((w.short_title || w.type || 'Warning') + ': ' + (w.title || ''));
+            if (!t) return;
+            out.push({ id: 'aus-bomw-' + i, source: 'BOM ' + (w._auState || w.state || 'AU'), title: t.slice(0, 160), link: 'http://www.bom.gov.au/', publishedAt: Date.parse(w.issue_time || '') || Date.now() });
+        });
+    } catch (e) {}
+    return out;
+}
+
 export default function IntelWire({ embedded = false, hidden = false, onHide = null }) {
     const appIsActive = useStore((s) => s.appIsActive);
     const sharedItems = useStore((s) => s.intelFeedItems);
@@ -191,9 +211,10 @@ export default function IntelWire({ embedded = false, hidden = false, onHide = n
                     lastUpdatedAt,
                 });
             }
-            const [hnItems, manifestItems] = await Promise.all([
+            const [hnItems, manifestItems, ausItems] = await Promise.all([
                 fetchHackerNewsIntel().catch(() => []),
                 fetchManifestIntel().catch(() => []),
+                fetchAusIntel().catch(() => []),
             ]);
 
             if (cancelled) return;
@@ -212,6 +233,7 @@ export default function IntelWire({ embedded = false, hidden = false, onHide = n
 
             ingest(manifestItems);
             ingest(hnItems);
+            ingest(ausItems);
 
             const keywordFiltered = merged.filter((item) => INTEL_KEYWORD_RE.test(item.title));
             const chosen = (keywordFiltered.length >= 6 ? keywordFiltered : merged)
