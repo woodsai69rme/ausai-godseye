@@ -60,6 +60,14 @@
   functions automatically; old explicit api rewrite would have shadowed them).
 - `typecheck` ✅ `lint` ✅ all function modules import → `function` ✅.
 
+## v7 — Release locked (local commit `7c5fec1`, origin untouched)
+- All AusAI work committed locally on `master` (27 files; mostly refreshed
+  manifests). Upstream `VrushankPatel/godseye` NOT pushed to (origin still
+  points there; fork first if you ever want to push).
+- Prod HTML verified serving AusAI title + AU meta description + new bundle.
+- Next optional: fork → push → Vercel Git auto-deploy; custom domain;
+  `vercel env add` for AISstream/Mapbox keys.
+
 Fork of [VrushankPatel/godseye](https://github.com/VrushankPatel/godseye) (Apache-2.0),
 re-centred on Australia. Local dir: `C:\Users\karma\godseye-app`.
 
