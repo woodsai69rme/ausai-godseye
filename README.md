@@ -1,4 +1,40 @@
-# Godseye 1.0
+# 🦘 AusAI Godseye — Australia-First OSINT Dashboard
+
+**Live:** https://godseye-app.vercel.app · **Repo:** https://github.com/woodsai69rme/ausai-godseye
+Fork of [VrushankPatel/godseye](https://github.com/VrushankPatel/godseye) (Apache-2.0), re-centred on Australia.
+
+## Run
+```bash
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # dist/
+npm run serve    # http://localhost:3001 (dist + API proxy)
+```
+
+## Deploy
+- **CLI (works today):** `cd godseye-app && vercel --prod --yes`
+- **Git auto-deploy (needs 1 setup):**
+  - Vercel Dashboard → godseye-app → Settings → Git → Connect `ausai-godseye` (branch `master`), **or**
+  - Add 3 repo secrets (Settings → Secrets → Actions):
+    `VERCEL_TOKEN` (vercel.com/account/tokens) · `ORG_ID` (`team_2ctwlxWqcwECpftcUhNQklYk`) · `PROJECT_ID` (`prj_Sug5l2OBSkJ1If6B083pAwu7kvAH`)
+  - Then every `git push origin master` auto-deploys via `.github/workflows/deploy-vercel.yml`.
+
+## API (Vercel serverless, all keyless)
+`/api/aus/summary` (BOM+RFS+USGS-AU rollup) · `/api/aus/quakes` · `/api/aus/fires` · `/api/aus/bom-warnings` · `/api/flights?mode=au` · `/api/health`
+
+## Optional free keys (`.env.local` → `vercel env add`)
+`VITE_AISSTREAM_API_KEY` (live ships) · `VITE_MAPBOX_ACCESS_TOKEN` (tiles) · `VITE_YOUTUBE_API_KEY` (CCTV) · `VITE_CESIUM_ION_TOKEN` (3D cities)
+Copy `.env.local.example` → `.env.local`, fill, restart.
+
+## AusAI AU layer
+18 ADF bases · 12 major ports · 6 cam hotspots · live BOM warnings / RFS fires / AU quakes.
+TopBar AU chip + Intel Wire `🇦🇺 AU` filter.
+
+See `AUSAI_AUSTRALIA_EDITION.md` for full changelog.
+
+---
+
+# Godseye 1.0 (upstream docs)
 
 <p align="center">
   <a href="https://godseye-x.web.app/"><strong>Launch Godseye</strong></a>
@@ -71,6 +107,23 @@ Godseye uses a BYOK model: Bring Your Own Key.
 
 - Use the hosted build directly at [https://godseye-x.web.app/](https://godseye-x.web.app/)
 - If you want to run it locally or self-host it, bring your own API keys for the keyed integrations listed below
+
+## BYOK Keys
+
+If you want the keyless feed set, you can run the app without any keys and it degrades gracefully.
+
+Keyed integrations (all optional):
+
+- `VITE_GOOGLE_MAPS_3D_KEY` or `VITE_GOOGLE_MAPS_API_KEY` — Google Photorealistic 3D tiles
+- `VITE_CESIUM_ION_TOKEN` — Cesium Ion assets
+- `VITE_MAPBOX_ACCESS_TOKEN` — Mapbox tiles / tokenized overlays
+- `VITE_YOUTUBE_API_KEY` — YouTube live CCTV discovery
+- `VITE_GUARDIAN_API_KEY` — Guardian intel enrichment
+- `VITE_AISSTREAM_API_KEY` — AISstream realtime vessel tracking
+- `VITE_FIREBASE_RTDB_URL` + `VITE_GODSEYE_CACHE_SECRET` — shared encrypted runtime cache
+
+Local secrets can be loaded through `scripts/local-secrets.sh` (gitignored) using `scripts/with-local-secrets.sh`.
+
 
 ## BYOK Keys
 
